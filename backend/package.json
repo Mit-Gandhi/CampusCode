@@ -8,7 +8,6 @@
   "dependencies": {
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.5",
-    "nodemailer": "^6.9.14",
     "openai": "^4.57.1",
     "express": "^4.x.x", 
     "cors": "^2.x.x",
