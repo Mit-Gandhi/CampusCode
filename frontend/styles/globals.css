@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* styles.css or global.css */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.nav-bar {
+  background-color: #333;
+  padding: 10px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-bar h1 {
+  margin: 0;
+}
+
+.nav-bar nav a {
+  margin-right: 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.home-page {
+  background: linear-gradient(135deg, #f3f4f6, #ffffff); /* Example Udemy-like gradient */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.main-content h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.video-button {
+  padding: 10px 20px;
+  background-color: #0056d2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.video-button:hover {
+  background-color: #003a8c;
+}
