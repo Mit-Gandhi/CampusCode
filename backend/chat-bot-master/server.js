@@ -14,7 +14,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 // Route to handle chatbot requests
 app.post("/api/chatbot", async (req, res) => {
   try {
-    const { message } = req.body; // Get the message from the frontend
+    const { message } = req.body;
     if (!message) {
       return res.status(400).json({ error: "Message is required." });
     }
@@ -27,13 +27,13 @@ app.post("/api/chatbot", async (req, res) => {
     // Check if the response exists and return the text
     if (result && result.response && result.response.text) {
       const send = result.response.text;
-      res.status(200).json({ response: send });
+      return res.status(200).json({ response: send });
     } else {
-      res.status(500).json({ error: "Failed to generate a response." });
+      return res.status(500).json({ error: "Failed to generate a response from Google API." });
     }
   } catch (error) {
     console.error("Error generating content:", error);
-    res.status(500).json({ error: "Failed to generate content." });
+    return res.status(500).json({ error: "Server error while generating content." });
   }
 });
 
