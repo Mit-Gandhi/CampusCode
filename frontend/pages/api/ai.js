@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     }
 
     // Use the deployed backend URL from environment variables
-    const response = await fetch(`${process.env.BACKEND_URL}/${encodeURIComponent(prompt)}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/${encodeURIComponent(prompt)}`);
     const data = await response.json();
 
     res.status(200).json({ message: data });
