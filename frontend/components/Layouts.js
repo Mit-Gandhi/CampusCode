@@ -20,13 +20,15 @@ const Layout = ({ children }) => {
       <header className="bg-gray-800 p-4 text-white">
         <nav className="container mx-auto flex justify-between items-center">
           <div className="text-xl font-bold">CampusCode</div>
-          <div className="hidden md:flex">
-            {/* Replace <a> with Link */}
-            <Link href="/" passHref>Home
+          <div className="hidden md:flex space-x-4"> {/* Added space between links */}
+            <Link href="/" passHref>
+              <span className="hover:underline">Home</span> {/* Optional hover effect */}
             </Link>
-            <Link href="/videos" passHref>Videos
+            <Link href="/videos" passHref>
+              <span className="hover:underline">Videos</span>
             </Link>
-            <Link href="/notes" passHref>Notes
+            <Link href="/notes" passHref>
+              <span className="hover:underline">Notes</span>
             </Link>
           </div>
           <button className="md:hidden" onClick={toggleMenu}>
@@ -36,13 +38,15 @@ const Layout = ({ children }) => {
           </button>
         </nav>
         {menuOpen && (
-          <div className="md:hidden flex flex-col mt-2">
-            {/* Replace <a> with Link */}
-            <Link href="/" passHref>Home
+          <div className="md:hidden flex flex-col mt-2 space-y-2"> {/* Added space between menu items */}
+            <Link href="/" passHref>
+              <span className="hover:underline">Home</span>
             </Link>
-            <Link href="/videos" passHref>Videos
+            <Link href="/videos" passHref>
+              <span className="hover:underline">Videos</span>
             </Link>
-            <Link href="/notes" passHref>Notes
+            <Link href="/notes" passHref>
+              <span className="hover:underline">Notes</span>
             </Link>
           </div>
         )}
