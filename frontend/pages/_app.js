@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Your Website Title</title>
+        <title>CampusCode</title>
       </Head>
       <Component {...pageProps} />
     </>
