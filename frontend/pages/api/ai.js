@@ -1,4 +1,3 @@
-// pages/api/ai.js
 export default async function handler(req, res) {
   try {
     const { prompt } = req.body;
@@ -7,8 +6,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'No prompt provided' });
     }
 
-    // Proxy the request to your chatbot server
-    const response = await fetch(`http://localhost:8000/${encodeURIComponent(prompt)}`);
+    // Use the deployed backend URL from environment variables
+    const response = await fetch(`${process.env.BACKEND_URL}/${encodeURIComponent(prompt)}`);
     const data = await response.json();
 
     res.status(200).json({ message: data });
