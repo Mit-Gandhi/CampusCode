@@ -22,14 +22,11 @@ const Layout = ({ children }) => {
           <div className="text-xl font-bold">CampusCode</div>
           <div className="hidden md:flex">
             {/* Replace <a> with Link */}
-            <Link href="/" passHref>
-              <a className={`mr-4 ${router.pathname === '/' ? 'text-blue-300' : ''}`}>Home</a>
+            <Link href="/" passHref>Home
             </Link>
-            <Link href="/videos" passHref>
-              <a className={`mr-4 ${router.pathname === '/videos' ? 'text-blue-300' : ''}`}>Videos</a>
+            <Link href="/videos" passHref>Videos
             </Link>
-            <Link href="/notes" passHref>
-              <a className={`${router.pathname === '/notes' ? 'text-blue-300' : ''}`}>Notes</a>
+            <Link href="/notes" passHref>Notes
             </Link>
           </div>
           <button className="md:hidden" onClick={toggleMenu}>
@@ -41,14 +38,11 @@ const Layout = ({ children }) => {
         {menuOpen && (
           <div className="md:hidden flex flex-col mt-2">
             {/* Replace <a> with Link */}
-            <Link href="/" passHref>
-              <a className={`py-2 ${router.pathname === '/' ? 'text-blue-300' : ''}`}>Home</a>
+            <Link href="/" passHref>Home
             </Link>
-            <Link href="/videos" passHref>
-              <a className={`py-2 ${router.pathname === '/videos' ? 'text-blue-300' : ''}`}>Videos</a>
+            <Link href="/videos" passHref>Videos
             </Link>
-            <Link href="/notes" passHref>
-              <a className={`py-2 ${router.pathname === '/notes' ? 'text-blue-300' : ''}`}>Notes</a>
+            <Link href="/notes" passHref>Notes
             </Link>
           </div>
         )}
