@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cors());
 
 // Initialize GoogleGenerativeAI with API Key
-const genAI = new GoogleGenerativeAI({ apiKey: process.env.GOOGLE_API_KEY });
+const genAI = new GoogleGenerativeAI({ apiKey: process.env.API_KEY });
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 // Route to handle chatbot requests
