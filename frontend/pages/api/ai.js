@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     }
 
     // Use the deployed backend URL from environment variables
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chatbot`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/chatbot`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -17,14 +17,14 @@ export default async function handler(req, res) {
 
     // Handle non-OK responses (e.g., 500, 404)
     if (!response.ok) {
-      return res.status(response.status).json({ error: `Error from server: ${response.statusText}` });
+      const errorText = await response.text();
+      return res.status(response.status).json({ error: `Error from server: ${errorText}` });
     }
 
     const data = await response.json();
-
-    res.status(200).json({ message: data });
+    return res.status(200).json({ message: data.response });
   } catch (error) {
     console.error('Error communicating with chatbot server:', error);
-    res.status(500).json({ error: 'Failed to generate a response' });
+    return res.status(500).json({ error: 'Failed to generate a response' });
   }
 }
