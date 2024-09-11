@@ -7,7 +7,19 @@ export default async function handler(req, res) {
     }
 
     // Use the deployed backend URL from environment variables
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/${encodeURIComponent(prompt)}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chatbot`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message: prompt }),
+    });
+
+    // Handle non-OK responses (e.g., 500, 404)
+    if (!response.ok) {
+      return res.status(response.status).json({ error: `Error from server: ${response.statusText}` });
+    }
+
     const data = await response.json();
 
     res.status(200).json({ message: data });
