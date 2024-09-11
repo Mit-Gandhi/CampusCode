@@ -1,7 +1,17 @@
-import '../styles/globals.css'; // Make sure this import statement is at the top of the file
+import Head from 'next/head';
+import '../styles/globals.css'; // Keep this at the top of the file
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Your Website Title</title>
+      </Head>
+      <Component {...pageProps} />
+    </>
+  );
 }
 
 export default MyApp;
