@@ -10,7 +10,7 @@ const Notes = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chatbot`, {
+      const res = await fetch(`${process.env.NEXT_BACKEND_URL}/chatbot`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
