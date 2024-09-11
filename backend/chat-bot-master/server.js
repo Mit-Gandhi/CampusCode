@@ -15,13 +15,22 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 app.post("/api/chatbot", async (req, res) => {
   try {
     const { message } = req.body; // Get the message from the frontend
+    if (!message) {
+      return res.status(400).json({ error: "Message is required." });
+    }
+
     const prompt = JSON.stringify(message);
 
-    // Call Google Generative AI to generate response
+    // Call Google Generative AI to generate a response
     const result = await model.generateContent(prompt);
-    const send = result.response.text();
 
-    res.status(200).json({ response: send });
+    // Check if the response exists and return the text
+    if (result && result.response && result.response.text) {
+      const send = result.response.text;
+      res.status(200).json({ response: send });
+    } else {
+      res.status(500).json({ error: "Failed to generate a response." });
+    }
   } catch (error) {
     console.error("Error generating content:", error);
     res.status(500).json({ error: "Failed to generate content." });
