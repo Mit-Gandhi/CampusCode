@@ -1,13 +1,19 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const axios = require("axios"); // We'll use axios to communicate with the chatbot
+
+// Import the necessary chatbot logic from chat-bot-master
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Route to forward chatbot requests to the chatbot server (chat-bot-master)
+// Initialize GoogleGenerativeAI with API Key
+const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+// Route to handle chatbot requests
 app.post("/api/chatbot", async (req, res) => {
   try {
     const { message } = req.body; // Get the message from the frontend
@@ -15,16 +21,21 @@ app.post("/api/chatbot", async (req, res) => {
       return res.status(400).json({ error: "Message is required." });
     }
 
-    // Forward the request to the chat-bot-master server
-    const chatbotResponse = await axios.post(`${process.env.CHATBOT_SERVER_URL}/api/chatbot`, {
-      message,
-    });
+    const prompt = JSON.stringify(message);
 
-    // Send back the response from chat-bot-master server
-    return res.status(200).json({ response: chatbotResponse.data.response });
+    // Call Google Generative AI to generate a response
+    const result = await model.generateContent(prompt);
+
+    // Check if the response exists and return the text
+    if (result && result.response && result.response.text) {
+      const send = result.response.text;
+      return res.status(200).json({ response: send });
+    } else {
+      return res.status(500).json({ error: "Failed to generate a response from Google API." });
+    }
   } catch (error) {
-    console.error("Error communicating with chatbot server:", error);
-    return res.status(500).json({ error: "Failed to communicate with chatbot server." });
+    console.error("Error generating content:", error);
+    return res.status(500).json({ error: "Server error while generating content." });
   }
 });
 
