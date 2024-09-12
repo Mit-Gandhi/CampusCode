@@ -8,14 +8,13 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: 'https://campuscode.vercel.app', // Change to your frontend URL
+    origin: 'https://campuscode.vercel.app', // Your frontend origin
     methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
-    credentials: true,
-    optionsSuccessStatus: 200,
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
+// Route to forward chatbot requests
 app.post("/api/chatbot", async (req, res) => {
   try {
     const { message } = req.body;
@@ -23,6 +22,7 @@ app.post("/api/chatbot", async (req, res) => {
       return res.status(400).json({ error: "Message is required." });
     }
 
+    // Forward to chatbot server
     const chatbotResponse = await axios.post(
       `${process.env.CHATBOT_SERVER_URL}/api/chatbot`,
       { message }
