@@ -1,13 +1,16 @@
-import { useState } from "react";
+// notes.js or wherever the chatbot input is handled
+
+import React, { useState } from "react";
 
 const NotesPage = () => {
-  const [input, setInput] = useState(""); // User input
-  const [response, setResponse] = useState(""); // Chatbot response
-  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [message, setMessage] = useState(""); // 'message' state to store the user input
+  const [response, setResponse] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  // Handle send message function
   const handleSendMessage = async () => {
-    if (input.trim() !== "") {
-      setIsLoading(true);
+    if (message.trim() !== "") {
+      setLoading(true);
       try {
         let t = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/chatbot`, {
           method: "POST",
@@ -15,50 +18,33 @@ const NotesPage = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            message: e, // your input message
+            message: message, // Send the 'message' state value
           }),
-        });        
-
-        if (!res.ok) {
-          throw new Error("Error communicating with chatbot server");
-        }
-
-        let data = await res.json();
-        setResponse(data.response); // Store chatbot response
+        });
+        if (!t.ok) throw Error("Error communicating with chatbot server");
+        let r = await t.json();
+        setResponse(r.response); // Update the response state
       } catch (error) {
         setResponse("Failed to get a response from the server.");
         console.error("Error:", error);
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold mb-4">AI Chatbot</h1>
-
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
-        <div className="bg-gray-100 p-3 rounded mb-4 h-32 overflow-auto">
-          {response ? <p>{response}</p> : <p className="text-gray-500">Chatbot response will appear here.</p>}
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <input
-            type="text"
-            className="w-full p-2 border rounded"
-            placeholder="Type your message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <button
-            onClick={handleSendMessage}
-            className={`px-4 py-2 bg-blue-500 text-white rounded ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-            disabled={isLoading}
-          >
-            {isLoading ? "Sending..." : "Send"}
-          </button>
-        </div>
+    <div>
+      <textarea
+        value={message} // Set textarea value from 'message' state
+        onChange={(e) => setMessage(e.target.value)} // Update state on input change
+        placeholder="Type your message here..."
+      />
+      <button onClick={handleSendMessage} disabled={loading}>
+        {loading ? "Sending..." : "Send"}
+      </button>
+      <div>
+        <p>Response: {response}</p>
       </div>
     </div>
   );
