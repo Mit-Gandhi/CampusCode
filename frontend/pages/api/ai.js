@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     }
 
     // Use the deployed backend URL from environment variables
-    const response = await fetch(`${process.env.NEXT_BACKEND_URL}/api/chatbot`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/chatbot`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
