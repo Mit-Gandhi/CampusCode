@@ -1,45 +1,44 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-
-// Import the necessary chatbot logic from chat-bot-master
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const axios = require("axios");
+require("dotenv").config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
 
-// Initialize GoogleGenerativeAI with API Key
-const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+// Set up CORS middleware
+app.use(
+  cors({
+    origin: 'https://campuscode.vercel.app', // Allow only your frontend origin
+    methods: ['GET', 'POST', 'OPTIONS'], // Allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    credentials: true, // If you want to allow cookies or credentials
+    optionsSuccessStatus: 200, // For legacy browsers that don't support 204
+  })
+);
 
-// Route to handle chatbot requests
+// Route to forward chatbot requests to the chatbot server (chat-bot-master)
 app.post("/api/chatbot", async (req, res) => {
   try {
-    const { message } = req.body; // Get the message from the frontend
+    const { message } = req.body;
     if (!message) {
       return res.status(400).json({ error: "Message is required." });
     }
 
-    const prompt = JSON.stringify(message);
+    // Forward the request to the chat-bot-master server
+    const chatbotResponse = await axios.post(
+      `${process.env.CHATBOT_SERVER_URL}/api/chatbot`,
+      { message }
+    );
 
-    // Call Google Generative AI to generate a response
-    const result = await model.generateContent(prompt);
-
-    // Check if the response exists and return the text
-    if (result && result.response && result.response.text) {
-      const send = result.response.text;
-      return res.status(200).json({ response: send });
-    } else {
-      return res.status(500).json({ error: "Failed to generate a response from Google API." });
-    }
+    return res.status(200).json({ response: chatbotResponse.data.response });
   } catch (error) {
-    console.error("Error generating content:", error);
-    return res.status(500).json({ error: "Server error while generating content." });
+    console.error("Error communicating with chatbot server:", error);
+    return res.status(500).json({ error: "Failed to communicate with chatbot server." });
   }
 });
 
-// Listen on the appropriate port (Vercel sets its own port)
+// Start the server
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Backend server is listening on port ${PORT}`);
