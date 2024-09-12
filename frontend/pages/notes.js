@@ -1,32 +1,36 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-const Notes = () => {
-  const [input, setInput] = useState('');
-  const [response, setResponse] = useState('');
-  const [loading, setLoading] = useState(false);
+const NotesPage = () => {
+  const [input, setInput] = useState(""); // User input
+  const [response, setResponse] = useState(""); // Chatbot response
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
-  const handleSend = async () => {
-    if (input.trim() === '') return; // Avoid sending empty messages
-    setLoading(true);
+  const handleSendMessage = async () => {
+    if (input.trim() !== "") {
+      setIsLoading(true);
+      try {
+        let res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/chatbot`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: input, // Send the user input to the backend
+          }),
+        });
 
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chatbot`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: input }),
-      });
+        if (!res.ok) {
+          throw new Error("Error communicating with chatbot server");
+        }
 
-      if (!res.ok) throw new Error('Error communicating with chatbot server');
-
-      const data = await res.json();
-      setResponse(data.response);
-    } catch (error) {
-      setResponse('Failed to get a response from the server.');
-      console.error('Error:', error);
-    } finally {
-      setLoading(false);
+        let data = await res.json();
+        setResponse(data.response); // Store chatbot response
+      } catch (error) {
+        setResponse("Failed to get a response from the server.");
+        console.error("Error:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -35,16 +39,10 @@ const Notes = () => {
       <h1 className="text-2xl font-bold mb-4">AI Chatbot</h1>
 
       <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
-        {/* Display Chatbot Response */}
         <div className="bg-gray-100 p-3 rounded mb-4 h-32 overflow-auto">
-          {response ? (
-            <p>{response}</p>
-          ) : (
-            <p className="text-gray-500">Chatbot response will appear here.</p>
-          )}
+          {response ? <p>{response}</p> : <p className="text-gray-500">Chatbot response will appear here.</p>}
         </div>
 
-        {/* Input Box */}
         <div className="flex items-center space-x-2">
           <input
             type="text"
@@ -54,13 +52,11 @@ const Notes = () => {
             onChange={(e) => setInput(e.target.value)}
           />
           <button
-            onClick={handleSend}
-            className={`px-4 py-2 bg-blue-500 text-white rounded ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            disabled={loading}
+            onClick={handleSendMessage}
+            className={`px-4 py-2 bg-blue-500 text-white rounded ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+            disabled={isLoading}
           >
-            {loading ? 'Sending...' : 'Send'}
+            {isLoading ? "Sending..." : "Send"}
           </button>
         </div>
       </div>
@@ -68,4 +64,4 @@ const Notes = () => {
   );
 };
 
-export default Notes;
+export default NotesPage;
