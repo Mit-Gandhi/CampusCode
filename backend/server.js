@@ -7,7 +7,11 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: '*',  // Allow all origins. You can restrict this to your frontend URL.
+  methods: 'GET,POST',
+  allowedHeaders: 'Content-Type,Authorization'
+}));
 
 // Initialize GoogleGenerativeAI with API Key
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
