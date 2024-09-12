@@ -6,18 +6,16 @@ require("dotenv").config();
 const app = express();
 app.use(express.json());
 
-// Set up CORS middleware
 app.use(
   cors({
-    origin: 'https://campuscode.vercel.app', // Allow only your frontend origin
-    methods: ['GET', 'POST', 'OPTIONS'], // Allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-    credentials: true, // If you want to allow cookies or credentials
-    optionsSuccessStatus: 200, // For legacy browsers that don't support 204
+    origin: 'https://campuscode.vercel.app', // Change to your frontend URL
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+    credentials: true,
+    optionsSuccessStatus: 200,
   })
 );
 
-// Route to forward chatbot requests to the chatbot server (chat-bot-master)
 app.post("/api/chatbot", async (req, res) => {
   try {
     const { message } = req.body;
@@ -25,7 +23,6 @@ app.post("/api/chatbot", async (req, res) => {
       return res.status(400).json({ error: "Message is required." });
     }
 
-    // Forward the request to the chat-bot-master server
     const chatbotResponse = await axios.post(
       `${process.env.CHATBOT_SERVER_URL}/api/chatbot`,
       { message }
@@ -38,7 +35,6 @@ app.post("/api/chatbot", async (req, res) => {
   }
 });
 
-// Start the server
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Backend server is listening on port ${PORT}`);
