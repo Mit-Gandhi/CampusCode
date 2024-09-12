@@ -9,15 +9,15 @@ const NotesPage = () => {
     if (input.trim() !== "") {
       setIsLoading(true);
       try {
-        let res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/chatbot`, {
+        let t = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/chatbot`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            message: input, // Send the user input to the backend
+            message: e, // your input message
           }),
-        });
+        });        
 
         if (!res.ok) {
           throw new Error("Error communicating with chatbot server");
